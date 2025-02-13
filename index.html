@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RapidCart</title>
+  <!-- Bootstrap CSS -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+  />
+  <!-- Font Awesome for icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  
+  
+  <style>
+    
+    body {
+      background: url('front.jg') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+      color: black;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    
+    /* Hero container centers all content vertically and horizontally */
+    .hero-container {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+    }
+    .hero-container h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .hero-container p.lead {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    /* Enhanced card styles */
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      border: none;
+      border-radius: 15px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+    .card h2 {
+      font-size: 1.75rem;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+    .card p {
+      color: #666;
+      font-size: 1rem;
+    }
+    .btn {
+      margin-top: 1rem;
+    }
+    /* Modal tweaks */
+    .modal-content {
+      border-radius: 10px;
+    }
+    .form-control {
+      border-radius: 5px;
+    }
+    .modal-header,
+    .modal-footer {
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Overlay for darkening the background -->
+  <div class="overlay"></div>
+
+  <!-- Hero Section -->
+  <div class="hero-container">
+    <img src="Rapid.png" alt="Title Logo" style="height: 350px; margin-bottom: 20px;">
+    <h1>Welcome to RapidCart</h1>
+
+    <p class="lead">An Instant Market Online Store - Shop &amp; Sell at the Speed of Life </p>
+    <div class="row w-100" style="max-width: 800px;">
+      <!-- Buyers Card -->
+      <div class="col-md-6 mb-3">
+        <div class="card p-4">
+          <div class="card-body">
+            <i class="fas fa-shopping-basket fa-3x mb-3 text-primary"></i>
+            <h2 class="card-title">Buyers</h2>
+            <p>Discover amazing products curated just for you.</p>
+            <a href="buyer.html" class="btn btn-primary btn-block">Shop Now</a>
+          </div>
+        </div>
+      </div>
+      <!-- Sellers Card -->
+      <div class="col-md-6 mb-3">
+        <div class="card p-4">
+          <div class="card-body">
+            <i class="fas fa-store fa-3x mb-3 text-success"></i>
+            <h2 class="card-title">Sellers</h2>
+            <p>List your products and reach a wider audience.</p>
+            <a href="seller.html" class="btn btn-success btn-block">Sell Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Login and Signup Buttons -->
+    <div class="mt-4">
+      <button
+        type="button"
+        class="btn btn-light mr-2"
+        data-toggle="modal"
+        data-target="#loginModal"
+      >
+        Login
+      </button>
+      <button
+        type="button"
+        class="btn btn-light"
+        data-toggle="modal"
+        data-target="#signupModal"
+      >
+        Sign Up
+      </button>
+    </div>
+  </div>
+
+<!-- Improved Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="loginModalLabel">Login</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="loginForm">
+            <!-- Email Field -->
+            <div class="form-group">
+              <label for="loginEmail">Email address</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                </div>
+                <input type="email" class="form-control" id="loginEmail" placeholder="Enter email" required>
+              </div>
+            </div>
+            <!-- Password Field -->
+            <div class="form-group">
+              <label for="loginPassword">Password</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-lock"></i>
+                  </span>
+                </div>
+                <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
+              </div>
+            </div>
+            <!-- Remember Me & Forgot Password -->
+            <div class="form-group form-check d-flex justify-content-between">
+              <div>
+                <input type="checkbox" class="form-check-input" id="rememberMe">
+                <label class="form-check-label" for="rememberMe">Remember Me</label>
+              </div>
+              <div>
+                <a href="#" class="small">Forgot Password?</a>
+              </div>
+            </div>
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Improved Signup Modal -->
+  <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="signupModalLabel">Sign Up</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="signupForm">
+            <!-- Full Name Field -->
+            <div class="form-group">
+              <label for="signupName">Full Name</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-user"></i>
+                  </span>
+                </div>
+                <input type="text" class="form-control" id="signupName" placeholder="Enter your full name" required>
+              </div>
+            </div>
+            <!-- Email Field -->
+            <div class="form-group">
+              <label for="signupEmail">Email address</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                </div>
+                <input type="email" class="form-control" id="signupEmail" placeholder="Enter email" required>
+              </div>
+              <small id="emailHelp" class="form-text text-muted">
+                We'll never share your email with anyone else.
+              </small>
+            </div>
+            <!-- Password Field -->
+            <div class="form-group">
+              <label for="signupPassword">Password</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-lock"></i>
+                  </span>
+                </div>
+                <input type="password" class="form-control" id="signupPassword" placeholder="Password" required>
+              </div>
+            </div>
+            <!-- Confirm Password Field -->
+            <div class="form-group">
+              <label for="signupPasswordConfirm">Confirm Password</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-lock"></i>
+                  </span>
+                </div>
+                <input type="password" class="form-control" id="signupPasswordConfirm" placeholder="Confirm Password" required>
+              </div>
+            </div>
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-success btn-block">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <!-- jQuery, Popper.js, and Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

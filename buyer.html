@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RapidBuyer</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <style>
+    body {
+      background-color: #f7f7f7;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    /* Navbar & Cart Icon */
+    .navbar {
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .cart-icon {
+      position: relative;
+      cursor: pointer;
+    }
+    .cart-icon .badge {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      font-size: 0.75rem;
+    }
+    /* Product Card Styles (for in-house products) */
+    .product-card {
+      border: none;
+      border-radius: 15px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+    .product-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+    }
+    .card-body {
+      text-align: center;
+      padding: 1rem;
+    }
+    .card-title {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    .price-tag {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #ff6600;
+      margin-bottom: 0.75rem;
+    }
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      max-width: 120px;
+    }
+    .quantity-controls button {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: #007bff;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+    .quantity-controls button:hover {
+      background: #0056b3;
+    }
+    .quantity-controls span {
+      margin: 0 10px;
+      width: 30px;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    .add-to-cart-btn {
+      margin-top: 10px;
+    }
+    /* Checkout Modal Styles */
+    .modal-header {
+      border-bottom: none;
+    }
+    .modal-footer {
+      border-top: none;
+    }
+    .table td, .table th {
+      vertical-align: middle;
+    }
+    /* Seller Product List (text only) */
+    #sellerProductList {
+      margin-top: 30px;
+      padding-left: 0;
+    }
+    #sellerProductList li {
+      list-style: none;
+      background: #fff;
+      margin-bottom: 10px;
+      padding: 15px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Updated Navbar with Cart Icon -->
+  <nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+      <img src="Rapid.png" alt="Title Logo" style="height: 80px; margin-right: 10px;">
+      RapidBuyer
+    </a>
+    <!-- Cart Icon: Clicking this opens the checkout modal -->
+    <div class="cart-icon" data-toggle="modal" data-target="#checkoutModal">
+      <i class="fas fa-shopping-cart fa-2x"></i>
+      <span id="cartItemCount" class="badge badge-danger">0</span>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <!-- Back Button -->
+    <button class="btn btn-secondary mb-3" onclick="window.history.back()">
+      <i class="fas fa-arrow-left"></i> Back
+    </button>
+
+    <!-- Product Search -->
+    <div class="row">
+      <div class="col-12 mb-4">
+        <input type="search" id="productSearch" class="form-control" placeholder="Search Products" />
+      </div>
+    </div>
+
+    <!-- Product Cards Container (In-house Products) -->
+    <div class="row" id="productContainer">
+      <!-- Product Card: Apple -->
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="card product-card">
+          <img src="Apple.jpeg" class="card-img-top product-image" alt="Apple" />
+          <div class="card-body">
+            <h5 class="card-title">Apple</h5>
+            <p class="price-tag">$10.00</p>
+            <div class="quantity-controls">
+              <button onclick="updateQuantity('Apple', -1)">-</button>
+              <span id="quantity-Apple">0</span>
+              <button onclick="updateQuantity('Apple', 1)">+</button>
+            </div>
+            <button class="btn btn-success btn-block add-to-cart-btn mt-2" onclick="addToCart('Apple', 10)">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Product Card: Orange -->
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="card product-card">
+          <img src="Orange.jpeg" class="card-img-top product-image" alt="Orange" />
+          <div class="card-body">
+            <h5 class="card-title">Orange</h5>
+            <p class="price-tag">$5.00</p>
+            <div class="quantity-controls">
+              <button onclick="updateQuantity('Orange', -1)">-</button>
+              <span id="quantity-Orange">0</span>
+              <button onclick="updateQuantity('Orange', 1)">+</button>
+            </div>
+            <button class="btn btn-success btn-block add-to-cart-btn mt-2" onclick="addToCart('Orange', 5)">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Product Card: Banana -->
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="card product-card">
+          <img src="Banana.jpeg" class="card-img-top product-image" alt="Banana" />
+          <div class="card-body">
+            <h5 class="card-title">Banana</h5>
+            <p class="price-tag">$3.00</p>
+            <div class="quantity-controls">
+              <button onclick="updateQuantity('Banana', -1)">-</button>
+              <span id="quantity-Banana">0</span>
+              <button onclick="updateQuantity('Banana', 1)">+</button>
+            </div>
+            <button class="btn btn-success btn-block add-to-cart-btn mt-2" onclick="addToCart('Banana', 3)">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Product Card: Strawberry -->
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="card product-card">
+          <img src="Strawberry.jpeg" class="card-img-top product-image" alt="Strawberry" />
+          <div class="card-body">
+            <h5 class="card-title">Strawberry</h5>
+            <p class="price-tag">$2.00</p>
+            <div class="quantity-controls">
+              <button onclick="updateQuantity('Strawberry', -1)">-</button>
+              <span id="quantity-Strawberry">0</span>
+              <button onclick="updateQuantity('Strawberry', 1)">+</button>
+            </div>
+            <button class="btn btn-success btn-block add-to-cart-btn mt-2" onclick="addToCart('Strawberry', 2)">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Product Card: Kiwi -->
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="card product-card">
+          <img src="Kiwi.jpeg" class="card-img-top product-image" alt="Kiwi" />
+          <div class="card-body">
+            <h5 class="card-title">Kiwi</h5>
+            <p class="price-tag">$5.00</p>
+            <div class="quantity-controls">
+              <button onclick="updateQuantity('Kiwi', -1)">-</button>
+              <span id="quantity-Kiwi">0</span>
+              <button onclick="updateQuantity('Kiwi', 1)">+</button>
+            </div>
+            <button class="btn btn-success btn-block add-to-cart-btn mt-2" onclick="addToCart('Kiwi', 5)">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Product Card: Grapes -->
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="card product-card">
+          <img src="Grapes.jpeg" class="card-img-top product-image" alt="Grapes" />
+          <div class="card-body">
+            <h5 class="card-title">Grapes</h5>
+            <p class="price-tag">$4.00</p>
+            <div class="quantity-controls">
+              <button onclick="updateQuantity('Grapes', -1)">-</button>
+              <span id="quantity-Grapes">0</span>
+              <button onclick="updateQuantity('Grapes', 1)">+</button>
+            </div>
+            <button class="btn btn-success btn-block add-to-cart-btn mt-2" onclick="addToCart('Grapes', 4)">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Additional product cards can be added here -->
+    </div>
+
+    <!-- Seller Submitted Products (Text-Only List) -->
+    <hr>
+    <h2 class="mt-4">Seller Submitted Products</h2>
+    <ul id="sellerProductList" class="list-group"></ul>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div class="modal fade" id="checkoutModal" tabindex="-1" role="dialog" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="checkoutModalLabel">Your Cart</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="clearModalInputs()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="cartEmptyMessage" class="text-center text-muted" style="display: none;">
+            Your cart is empty.
+          </div>
+          <div id="cartTableContainer" style="display: none;">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Subtotal</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="cartItemsTableBody">
+                <!-- Cart items will be inserted dynamically here -->
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="3" class="text-right">Total:</th>
+                  <th id="cartTotal">$0.00</th>
+                  <th></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearModalInputs()">Close</button>
+          <button type="button" class="btn btn-warning" onclick="clearCart()">Clear Cart</button>
+          <button type="button" class="btn btn-primary" onclick="proceedToPayment()">Proceed to Payment</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery, Popper.js, and Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script>
+    // Global cart object (using product name as key)
+    const cart = {};
+
+    // Update quantity display on product cards
+    function updateQuantity(productName, change) {
+      const quantityElem = document.getElementById("quantity-" + productName);
+      let currentQuantity = parseInt(quantityElem.textContent) || 0;
+      currentQuantity = Math.max(0, currentQuantity + change);
+      quantityElem.textContent = currentQuantity;
+    }
+
+    // Add in-house product to the cart (from product cards)
+    function addToCart(productName, price) {
+      const quantityElem = document.getElementById("quantity-" + productName);
+      const quantity = parseInt(quantityElem.textContent) || 0;
+      if (quantity <= 0) {
+        alert("Please select a quantity greater than zero.");
+        return;
+      }
+      if (cart[productName]) {
+        cart[productName].quantity += quantity;
+      } else {
+        cart[productName] = { price: price, quantity: quantity };
+      }
+      quantityElem.textContent = 0;
+      updateCartDisplay();
+    }
+
+    // Update the cart display (modal table and counter badge)
+    function updateCartDisplay() {
+      let totalItems = 0;
+      for (let key in cart) {
+        if (cart.hasOwnProperty(key)) {
+          totalItems += cart[key].quantity;
+        }
+      }
+      
+      // Update the cart counter badge in the navbar
+      document.getElementById("cartItemCount").textContent = totalItems;
+      
+      // Update modal table with cart items
+      const cartItemsTableBody = document.getElementById("cartItemsTableBody");
+      cartItemsTableBody.innerHTML = "";
+      let totalPrice = 0;
+      for (let product in cart) {
+        if (cart.hasOwnProperty(product)) {
+          const item = cart[product];
+          const subtotal = item.price * item.quantity;
+          totalPrice += subtotal;
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${product}</td>
+            <td>$${item.price.toFixed(2)}</td>
+            <td>
+              <div class="input-group" style="max-width: 120px;">
+                <div class="input-group-prepend">
+                  <button class="btn btn-outline-secondary btn-sm" onclick="changeCartItemQuantity('${product}', -1)">-</button>
+                </div>
+                <input type="text" class="form-control text-center" value="${item.quantity}" readonly>
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary btn-sm" onclick="changeCartItemQuantity('${product}', 1)">+</button>
+                </div>
+              </div>
+            </td>
+            <td>$${subtotal.toFixed(2)}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" onclick="removeCartItem('${product}')">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </td>
+          `;
+          cartItemsTableBody.appendChild(row);
+        }
+      }
+      document.getElementById("cartTotal").textContent = "$" + totalPrice.toFixed(2);
+      
+      // Show or hide the cart table based on whether there are items
+      if (totalItems > 0) {
+        document.getElementById("cartTableContainer").style.display = "block";
+        document.getElementById("cartEmptyMessage").style.display = "none";
+      } else {
+        document.getElementById("cartTableContainer").style.display = "none";
+        document.getElementById("cartEmptyMessage").style.display = "block";
+      }
+    }
+
+    // Change item quantity within the modal
+    function changeCartItemQuantity(productName, change) {
+      if (cart[productName]) {
+        cart[productName].quantity += change;
+        if (cart[productName].quantity < 1) {
+          delete cart[productName];
+        }
+        updateCartDisplay();
+      }
+    }
+
+    // Remove item from the cart
+    function removeCartItem(productName) {
+      if (cart[productName]) {
+        delete cart[productName];
+        updateCartDisplay();
+      }
+    }
+
+    // Proceed to Payment (dummy function)
+    function proceedToPayment() {
+      if (Object.keys(cart).length === 0) {
+        alert("Your cart is empty.");
+        return;
+      }
+      alert("Proceeding to payment...\nTotal: " + document.getElementById("cartTotal").textContent);
+      clearCart();
+      $("#checkoutModal").modal("hide");
+    }
+
+    // Clear the entire cart
+    function clearCart() {
+      for (let product in cart) {
+        if (cart.hasOwnProperty(product)) {
+          delete cart[product];
+        }
+      }
+      updateCartDisplay();
+    }
+
+    // Clear modal inputs if necessary
+    function clearModalInputs() {
+      // (Currently no additional inputs to clear)
+    }
+
+    // Product search functionality for in-house product cards
+    document.getElementById("productSearch").addEventListener("input", function () {
+      const query = this.value.toLowerCase();
+      const productCards = document.querySelectorAll("#productContainer .col-12.col-sm-6.col-md-4.col-lg-3");
+      productCards.forEach((card) => {
+        const title = card.querySelector(".card-title").textContent.toLowerCase();
+        card.style.display = title.includes(query) ? "" : "none";
+      });
+    });
+
+    // -----------------------------
+    // Seller Products Section
+    // -----------------------------
+    // Display seller submitted products (stored in localStorage under "products")
+    function displaySellerProducts() {
+      const products = JSON.parse(localStorage.getItem("products")) || [];
+      const sellerList = document.getElementById("sellerProductList");
+      sellerList.innerHTML = "";
+      products.forEach((product, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <div>
+            <strong>${product.productName}</strong> - $${parseFloat(product.productPrice).toFixed(2)} per pound - Category: ${product.category}
+            <br>
+            <small>${product.description || ""}</small>
+          </div>
+          <button class="btn btn-success btn-sm" onclick="buySellerProduct(${index})">
+            <i class="fas fa-shopping-cart"></i> Buy
+          </button>
+        `;
+        sellerList.appendChild(li);
+      });
+    }
+
+    // Function to buy a seller product
+    function buySellerProduct(index) {
+      const products = JSON.parse(localStorage.getItem("products")) || [];
+      const product = products[index];
+      let quantity = prompt(`Enter quantity (in pounds) for ${product.productName}:`);
+      quantity = parseFloat(quantity);
+      if (!isNaN(quantity) && quantity > 0) {
+        if (cart[product.productName]) {
+          cart[product.productName].quantity += quantity;
+        } else {
+          cart[product.productName] = { price: product.productPrice, quantity: quantity };
+        }
+        alert(`${quantity} pounds of ${product.productName} added to your cart.`);
+        updateCartDisplay();
+      } else {
+        alert("Please enter a valid quantity.");
+      }
+    }
+
+    // On page load, display seller products
+    document.addEventListener("DOMContentLoaded", function() {
+      displaySellerProducts();
+    });
+  </script>
+</body>
+</html>
